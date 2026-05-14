@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ผู้ใช้ที่ login แล้วเท่านั้นที่อ่าน/เขียน groups ของตัวเองได้
+    match /users/{userId}/groups/{groupId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // jobs: อ่านได้เฉพาะเจ้าของ
+    match /users/{userId}/jobs/{jobId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
