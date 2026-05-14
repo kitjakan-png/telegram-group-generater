@@ -39,9 +39,10 @@ else:
 db = fb_store.client()
 
 # ── Telegram Config ───────────────────────────────────────────────────────────
-API_ID     = int(os.environ.get("TG_API_ID", "31069095"))
-API_HASH   = os.environ.get("TG_API_HASH", "0d25832d9bbdefb403d2fd9a4ab37870")
-TG_SESSION = os.environ.get("TG_SESSION", "")  # StringSession string
+API_ID       = int(os.environ.get("TG_API_ID", "31069095"))
+API_HASH     = os.environ.get("TG_API_HASH", "0d25832d9bbdefb403d2fd9a4ab37870")
+TG_SESSION   = os.environ.get("TG_SESSION", "")  # StringSession string
+BOT_USERNAME = os.environ.get("BOT_USERNAME", "rdns_care_bot")  # บอทที่เพิ่มทุกกลุ่ม
 
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "*")
 
@@ -108,7 +109,9 @@ async def safe_add(client: Client, chat_id: int, username: str) -> bool:
 
 # ── Job Runner ────────────────────────────────────────────────────────────────
 
-async def run_job(job_id: str, uid: str, group_names: list[str], bot_username: str):
+async def run_job(job_id: str, uid: str, group_names: list[str], bot_username: str = ""):
+    # ใช้ BOT_USERNAME จาก env var เสมอ ไม่สนค่าจาก frontend
+    bot_username = BOT_USERNAME
     job = jobs[job_id]
     job["status"] = "running"
     results = []
