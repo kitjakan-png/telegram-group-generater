@@ -28,8 +28,14 @@ from pyrogram import Client
 from pyrogram.errors import FloodWait, PeerFlood, UserPrivacyRestricted, ChatAdminRequired
 
 # ── Firebase Admin ────────────────────────────────────────────────────────────
-# บน Cloud Run ใช้ Application Default Credentials อัตโนมัติ
-firebase_admin.initialize_app()
+# ถ้ามี FIREBASE_SERVICE_ACCOUNT env var (JSON string) ใช้ credentials นั้น
+# ถ้าไม่มี ใช้ Application Default Credentials (สำหรับ Cloud Run)
+_sa_json = os.environ.get("FIREBASE_SERVICE_ACCOUNT")
+if _sa_json:
+    _cred = credentials.Certificate(json.loads(_sa_json))
+    firebase_admin.initialize_app(_cred)
+else:
+    firebase_admin.initialize_app()
 db = fb_store.client()
 
 # ── Telegram Config ───────────────────────────────────────────────────────────
