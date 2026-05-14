@@ -43,6 +43,7 @@ API_ID       = int(os.environ.get("TG_API_ID", "31069095"))
 API_HASH     = os.environ.get("TG_API_HASH", "0d25832d9bbdefb403d2fd9a4ab37870")
 TG_SESSION   = os.environ.get("TG_SESSION", "")  # StringSession string
 BOT_USERNAME = os.environ.get("BOT_USERNAME", "rdns_care_bot")  # บอทที่เพิ่มทุกกลุ่ม
+BOT_TOKEN    = os.environ.get("BOT_TOKEN", "")                  # Bot API Token แสดงในผลลัพธ์
 
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "*")
 
@@ -156,6 +157,7 @@ async def run_job(job_id: str, uid: str, group_names: list[str], bot_username: s
                     "chat_id":     str(chat_id),
                     "invite_link": invite_link,
                     "bot_username": bot_username,
+                    "bot_token":   BOT_TOKEN,
                     "status":      "success",
                     "created_at":  datetime.now(timezone.utc).isoformat(),
                 }
@@ -181,7 +183,8 @@ async def run_job(job_id: str, uid: str, group_names: list[str], bot_username: s
                     row = {
                         "name": name, "chat_id": str(chat_id),
                         "invite_link": link_obj.invite_link,
-                        "bot_username": bot_username, "status": "success",
+                        "bot_username": bot_username, "bot_token": BOT_TOKEN,
+                        "status": "success",
                         "created_at": datetime.now(timezone.utc).isoformat(),
                     }
                     results.append(row)

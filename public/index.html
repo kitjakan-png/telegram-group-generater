@@ -420,13 +420,17 @@ function renderResults(results) {
   if (!results.length) { area.innerHTML = '<div class="empty">ไม่มีผลลัพธ์</div>'; return; }
 
   let html = '<div class="table-wrap"><table><thead><tr>'
-           + '<th>#</th><th>ชื่อกลุ่ม</th><th>Chat ID</th><th>Invite Link</th><th>สถานะ</th>'
+           + '<th>#</th><th>ชื่อกลุ่ม</th><th>Chat ID</th><th>Bot Token</th><th>Invite Link</th><th>สถานะ</th>'
            + '</tr></thead><tbody>';
   results.forEach((r, i) => {
-    const ok   = r.status === "success";
-    const link = ok
+    const ok    = r.status === "success";
+    const link  = ok
       ? `<a href="${r.invite_link}" target="_blank">${r.invite_link}</a>
          <button class="copy-btn" onclick="cp('${r.invite_link}',this)">📋</button>`
+      : "-";
+    const token = r.bot_token
+      ? `<span class="chat-id" style="font-size:11px">${r.bot_token}</span>
+         <button class="copy-btn" onclick="cp('${r.bot_token}',this)">📋</button>`
       : "-";
     html += `<tr>
       <td style="color:var(--muted)">${i+1}</td>
@@ -434,6 +438,7 @@ function renderResults(results) {
       <td class="chat-id">${r.chat_id}
         ${ok ? `<button class="copy-btn" onclick="cp('${r.chat_id}',this)">📋</button>` : ""}
       </td>
+      <td class="link-cell">${token}</td>
       <td class="link-cell">${link}</td>
       <td><span class="badge ${ok?"ok":"err"}">${ok?"✓ สำเร็จ":"✗ Error"}</span></td>
     </tr>`;
@@ -489,8 +494,8 @@ window.cp = (text, btn) => {
 
 window.exportCSV = () => {
   if (!allResults.length) return;
-  const rows = [["ชื่อกลุ่ม","chat_id","invite_link","สถานะ"]];
-  allResults.forEach(r => rows.push([r.name, r.chat_id, r.invite_link, r.status]));
+  const rows = [["ชื่อกลุ่ม","chat_id","bot_token","invite_link","สถานะ"]];
+  allResults.forEach(r => rows.push([r.name, r.chat_id, r.bot_token||"", r.invite_link, r.status]));
   const csv = rows.map(r => r.map(v => `"${v}"`).join(",")).join("\n");
   const a   = document.createElement("a");
   a.href    = "data:text/csv;charset=utf-8,﻿" + encodeURIComponent(csv);
